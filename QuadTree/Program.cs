@@ -8,10 +8,11 @@ namespace QuadTree
     {
         static void Main(string[] args)
         {
-            List<Point> numbers = new List<Point>();
+            List<Point> nodes = new List<Point>();
 
 
-            try { 
+            try
+            {
                 // Read file using StreamReader. Reads file line by line    
                 using (StreamReader file = new StreamReader("input.txt"))
                 {
@@ -21,10 +22,17 @@ namespace QuadTree
                     while ((ln = file.ReadLine()) != null)
                     {
                         Console.WriteLine(ln);
+                        
+                        if (counter % 2 == 0)
+                        {
+                            string[] tokens = ln.Split(' ');
+
+                            nodes.Add(new Point(Convert.ToDouble(tokens[0]), Convert.ToDouble(tokens[1]), Convert.ToDouble(tokens[2]), Convert.ToInt16(tokens[3])));                           
+                        }
                         counter++;
                     }
                     file.Close();
-                    Console.WriteLine(counter + "File has {counter} lines.");
+
                 }
             }
             catch (IOException e)
