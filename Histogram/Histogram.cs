@@ -86,7 +86,14 @@ namespace Histogram
         }
         public void CalculateDeviation()
         {
+            double nominator = 0, denominator = 0;
+            for (int i = 0; i < intervals.Count; i++)
+            {
+                nominator += intervals[i].H * Math.Pow(intervals[i].K - average, 2);
+                denominator += intervals[i].H;
 
+            }
+            deviation = Math.Sqrt(nominator / denominator);
         }
         public void CalculateSkewness()
         {
@@ -97,7 +104,7 @@ namespace Histogram
         public void CalculateAllVariables()
         {
             CalculateAverage();
-            //CalculateDeviation();
+            CalculateDeviation();
             //CalculateSkewness();
             //CalculateKurtosis();
         }
