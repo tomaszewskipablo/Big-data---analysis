@@ -6,7 +6,7 @@ namespace Histogram
     {
         static void Main(string[] args)
         {
-            Histogram histogram = new Histogram(5); // create histogram with bin size
+            Histogram histogram = new Histogram(4); // create histogram with bin size
 
             histogram.InsertValue(1);
             histogram.InsertValue(2);
@@ -22,6 +22,8 @@ namespace Histogram
             histogram.InsertValue(22);
             histogram.InsertValue(25);
 
+            histogram.MakeIntervals();
+            histogram.FilfullIntervals();
         }
     }
 }
