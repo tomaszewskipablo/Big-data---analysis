@@ -23,7 +23,10 @@ namespace Histogram
             histogram.InsertValue(25);
 
             histogram.MakeIntervals();
+            histogram.CalculateKForIntervals();
             histogram.FilfullIntervals();
+            histogram.CalculateAllVariables();
+            histogram.WriteToConsoleStatistics();
         }
     }
 }

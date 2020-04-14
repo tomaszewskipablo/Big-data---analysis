@@ -6,7 +6,7 @@ namespace Histogram
     public class Histogram
     {
         public int binSize = 0;
-        public int count = 0;
+        public int numberOfPoints = 0;
         public double min = double.MaxValue;
         public double max = double.MinValue;
 
@@ -24,7 +24,7 @@ namespace Histogram
 
         public void InsertValue<T>(T value)
         {
-            count++;
+            numberOfPoints++;
 
             double v = Convert.ToDouble(value);
             numbers.Add(v);
@@ -59,32 +59,56 @@ namespace Histogram
                     if (intervals[interval].minRange <= numbers[i] && intervals[interval].maxRange > numbers[i])
                     {
                         intervals[interval].values.Add(numbers[i]);
+                        intervals[interval].H++;
                         break;
                     }
                 }
             }
         }
 
-        public void CalculateKForINtervals()
+        public void CalculateKForIntervals()
         {
             foreach (var interval in intervals)
             {
                 interval.CalculateK(binSize);
             }
         }
-        //public void CalculateAverage()()
-        //{
-        //    foreach (var interval in intervals)
-        //    {
-        //        interval.
-        //    }
-        //}
+        public void CalculateAverage()
+        {
+            double nominator = 0, denominator = 0;
+
+            for (int i = 0; i < intervals.Count; i++)
+            {
+                nominator += intervals[i].H * intervals[i].K;
+                denominator += intervals[i].H;
+            }
+            average = nominator / denominator;
+        }
+        public void CalculateDeviation()
+        {
+
+        }
+        public void CalculateSkewness()
+        {
+        }
+        public void CalculateKurtosis()
+        {
+        }
         public void CalculateAllVariables()
         {
-            average = CalculateAverage();
-            deviation = CalculateDeviation();
-            skewness = CalculateSkewness();
-            kurtosis = CalculateKurtosis();
+            CalculateAverage();
+            //CalculateDeviation();
+            //CalculateSkewness();
+            //CalculateKurtosis();
+        }
+        public void WriteToConsoleStatistics()
+        {
+
+            Console.WriteLine("Number of points inside given bounding box: " + numberOfPoints);
+            Console.WriteLine("Calculated average: " + average);
+            Console.WriteLine("Calculated deviation: " + deviation);
+            Console.WriteLine("Calculated skewness: " + skewness);
+            Console.WriteLine(" Calculated kurtosis: " + kurtosis);
         }
 
 

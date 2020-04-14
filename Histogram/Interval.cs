@@ -7,7 +7,8 @@ namespace Histogram
     
     class Interval
     {
-        public int H;
+        public double K=0;
+        public int H=0;
         public double minRange;
         public double maxRange;
         public List<double> values = new List<double>();
@@ -16,6 +17,10 @@ namespace Histogram
         {
             this.minRange = minRange;
             this.maxRange = maxRange;
+        }
+        public void CalculateK(int bin_size)
+        {
+            K = minRange + bin_size / 2;
         }
     }
 }
