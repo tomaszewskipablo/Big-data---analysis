@@ -10,6 +10,8 @@ namespace Histogram
         public double min = double.MaxValue;
         public double max = double.MinValue;
 
+        public double n;
+
         List<double> numbers = new List<double>();
         List<Interval> intervals = new List<Interval>();
         public Histogram(int binSize)
@@ -59,5 +61,22 @@ namespace Histogram
                 }
             }
         }
+        
+        public void CalculateKForINtervals()
+        {
+            foreach (var interval in intervals)
+            {
+                interval.CalculateK(binSize);
+            }
+        }
+        //public void CalculateN()
+        //{
+        //    foreach (var interval in intervals)
+        //    {
+        //        interval.
+        //    }
+        //}
+
+        
     }
 }
