@@ -97,6 +97,27 @@ namespace Histogram
         }
         public void CalculateSkewness()
         {
+            double nominator = 0, denominator = 0;
+            double nominatorSub = 0, denominatorSub = 0;
+            for (int i = 0; i < intervals.Count; i++)
+            {
+                nominatorSub += intervals[i].H * Math.Pow(intervals[i].K - average, 3);
+                denominatorSub += intervals[i].H;
+
+            }
+            nominator = nominatorSub / denominatorSub;
+
+            nominatorSub = 0; denominatorSub = 0;
+            for (int i = 0; i < intervals.Count; i++)
+            {
+                nominatorSub += intervals[i].H * Math.Pow(intervals[i].K - average, 2);
+                denominatorSub += intervals[i].H;              
+            }
+            denominatorSub--;
+
+            denominator = (Math.Pow(nominatorSub / denominatorSub,1.5));
+
+            skewness = nominator / denominator;
         }
         public void CalculateKurtosis()
         {
@@ -105,7 +126,7 @@ namespace Histogram
         {
             CalculateAverage();
             CalculateDeviation();
-            //CalculateSkewness();
+            CalculateSkewness();
             //CalculateKurtosis();
         }
         public void WriteToConsoleStatistics()
