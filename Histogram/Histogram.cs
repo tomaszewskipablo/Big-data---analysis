@@ -121,13 +121,22 @@ namespace Histogram
         }
         public void CalculateKurtosis()
         {
+            double nominator = 0, denominator = 0, factor = 0;
+            for (int i = 0; i < intervals.Count; i++)
+            {
+                nominator += intervals[i].H * Math.Pow(intervals[i].K - average, 4);
+                denominator +=intervals[i].H * Math.Pow(intervals[i].K - average, 2);
+                factor += intervals[i].H;
+            }
+            denominator = Math.Pow(denominator, 2);
+            kurtosis = factor * nominator / denominator;
         }
         public void CalculateAllVariables()
         {
             CalculateAverage();
             CalculateDeviation();
             CalculateSkewness();
-            //CalculateKurtosis();
+            CalculateKurtosis();
         }
         public void WriteToConsoleStatistics()
         {
