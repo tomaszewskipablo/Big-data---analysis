@@ -7,8 +7,11 @@ namespace QuadTree
         public double Z { get; set; }
         public short I { get; set; }
 
+        public Point()
+        {
+        }
 
-        public Point(double x, double y, double z, short i)
+            public Point(double x, double y, double z, short i)
         {
             Position position = new Position(x, y);
             Position = position;

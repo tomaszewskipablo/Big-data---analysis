@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 using System.Text;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace QuadTree
 {
     class Structure
     {
-        public SortedList<double, Point> Data = new SortedList<double, Point>();
+        public SortedList<Position, Point> Data = new SortedList<Position, Point>();
+        int numerOfLines = 0;
 
         public void ReadFromFile()
         {
@@ -24,12 +26,14 @@ namespace QuadTree
                     {
 
                         string[] tokens = ln.Split(' ');
-                        Data.Add(Convert.ToDouble(tokens[0]), new Point(Convert.ToDouble(tokens[0]), Convert.ToDouble(tokens[1]), Convert.ToDouble(tokens[2]), Convert.ToInt16(tokens[3])));
+                        Position p = new Position(Convert.ToDouble(tokens[0]), Convert.ToDouble(tokens[1]));
+                        
+                        Data.Add(p, new Point(Convert.ToDouble(tokens[0]), Convert.ToDouble(tokens[1]), Convert.ToDouble(tokens[2]), Convert.ToInt16(tokens[3])));
 
                         counter++;
                     }
                     file.Close();
-
+                    numerOfLines = counter;
                 }
             }
             catch (IOException e)
@@ -43,7 +47,7 @@ namespace QuadTree
         {            
             using (BinaryWriter writer = new BinaryWriter(File.Open("data.bin", FileMode.Create)))
             {
-                foreach (KeyValuePair<double, Point> kvp in Data)
+                foreach (KeyValuePair<Position, Point> kvp in Data)
                 {
                     writer.Write(kvp.Value.Position.X);
                     writer.Write(kvp.Value.Position.Y);
@@ -54,26 +58,45 @@ namespace QuadTree
         }
 
 
-        public void GetDataFromBinaryFile(double d1, double d2)
+        public void GetDataFromBinaryFile(double minX, double maxX)
         {
+            List<Point> p = new List<Point>();
+            
             double X;
-            double Y;
-            double Z;
-            double I;
-
-
+            int counter = 2;
+            int size = numerOfLines * 26;
+            int change=size/2;
+            int position = size / 2; // middle
             using (BinaryReader reader = new BinaryReader(File.Open("data.bin", FileMode.Open)))
             {
-                X = reader.ReadDouble();
-                Y = reader.ReadDouble();
-                Z = reader.ReadDouble();
-                I = reader.ReadInt16();
-            }
+                
+                do
+                {
+                    change = change / 2;
+                    change= change + change % 26;
 
-            Console.WriteLine("X: " + X);
-            Console.WriteLine("Y: " + Y);
-            Console.WriteLine("Z: " + Z);
-            Console.WriteLine("I: " + I);
+                    reader.BaseStream.Position = position; // middle
+                    X = reader.ReadDouble();
+                    if (minX < X && X < maxX)
+                    {
+                        Point point = new Point();
+                        point.Position.X = X;
+                        point.Position.Y = reader.ReadDouble();
+                        point.Z = reader.ReadDouble();
+                        point.I = reader.ReadInt16();
+                        p.Add(point);
+                    }
+                    else if (maxX < X) // we are too far
+                    {
+                        position -= change; 
+                    }
+                    else
+                    {
+                        position += change;                      
+                    }
+
+                } while (true);
+            }
         }
     }
 }

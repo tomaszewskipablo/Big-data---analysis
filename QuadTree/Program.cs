@@ -11,7 +11,7 @@ namespace QuadTree
             Structure structure = new Structure();
             structure.ReadFromFile();
             structure.SaveAsBinaryFile();
-            double d1=2, d2 = 1;
+            double d1=1, d2 = 3;
             structure.GetDataFromBinaryFile(d1, d2);
             
             // Histogram .....
