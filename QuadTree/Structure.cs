@@ -81,12 +81,39 @@ namespace QuadTree
                     X = reader.ReadDouble();
                     if (minX <= X && X < maxX)
                     {
-                        Point point = new Point();
-                        point.Position.X = X;
-                        point.Position.Y = reader.ReadDouble();
-                        point.Z = reader.ReadDouble();
-                        point.I = reader.ReadInt16();
-                        p.Add(point);
+                        // We are in the right place now, go up
+                        do
+                        {
+                            position -= 26;
+                            reader.BaseStream.Position = position;
+                            X = reader.ReadDouble();
+                            if (X < minX)
+                            {
+                                break;                                
+                            }
+                        } while (true);
+                        //We are on minimum
+                        do
+                        {
+
+                            position += 26;
+                            reader.BaseStream.Position = position;
+                            X = reader.ReadDouble();
+                            if (X > maxX)
+                            {
+                                position += 26;
+                                break;
+                            }
+                            // ADD POINT
+                            Point point = new Point();
+                            point.Position.X = X;
+                            point.Position.Y = reader.ReadDouble();
+                            point.Z = reader.ReadDouble();
+                            point.I = reader.ReadInt16();
+                            p.Add(point);
+
+
+                        } while (true);                                              
                     }
                     else if (maxX <= X) // we are too far
                     {
@@ -100,5 +127,6 @@ namespace QuadTree
                 } while (true);
             }
         }
+
     }
 }
