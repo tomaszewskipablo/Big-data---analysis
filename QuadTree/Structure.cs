@@ -4,6 +4,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.CompilerServices;
 
 namespace QuadTree
 {
@@ -58,7 +59,7 @@ namespace QuadTree
         }
 
 
-        public void GetDataFromBinaryFile(double minX, double maxX)
+        public void GetDataFromBinaryFile(double minX, double maxX, double minY, double maxY)
         {
             List<Point> p = new List<Point>();
             
@@ -101,7 +102,7 @@ namespace QuadTree
                             X = reader.ReadDouble();
                             if (X > maxX)
                             {
-                                position += 26;
+                                position -= 26;
                                 break;
                             }
                             // ADD POINT
@@ -110,8 +111,10 @@ namespace QuadTree
                             point.Position.Y = reader.ReadDouble();
                             point.Z = reader.ReadDouble();
                             point.I = reader.ReadInt16();
-                            p.Add(point);
-
+                            if (minY < point.Position.Y && point.Position.Y < maxX)
+                            {
+                                p.Add(point);
+                            }
 
                         } while (true);                                              
                     }
