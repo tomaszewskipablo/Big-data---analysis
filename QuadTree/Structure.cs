@@ -59,77 +59,7 @@ namespace QuadTree
         }
 
 
-        public void GetDataFromBinaryFile(double minX, double maxX, double minY, double maxY)
-        {
-            List<Point> p = new List<Point>();
-            
-            double X; 
-            int counter = 2;
-            int size = numerOfLines * 26;
-            size = size + size % 26;
-            int change=size/2;
-            int position = size / 2; // middle
-            
-            using (BinaryReader reader = new BinaryReader(File.Open("data.bin", FileMode.Open)))
-            {
-                
-                do
-                {
-                    change = change / 2;
-                    change= change + change % 26;
-
-                    reader.BaseStream.Position = position; // middle
-                    X = reader.ReadDouble();
-                    if (minX <= X && X < maxX)
-                    {
-                        // We are in the right place now, go up
-                        do
-                        {
-                            position -= 26;
-                            reader.BaseStream.Position = position;
-                            X = reader.ReadDouble();
-                            if (X < minX)
-                            {
-                                break;                                
-                            }
-                        } while (true);
-                        //We are on minimum
-                        do
-                        {
-
-                            position += 26;
-                            reader.BaseStream.Position = position;
-                            X = reader.ReadDouble();
-                            if (X > maxX)
-                            {
-                                position -= 26;
-                                break;
-                            }
-                            // ADD POINT
-                            Point point = new Point();
-                            point.Position.X = X;
-                            point.Position.Y = reader.ReadDouble();
-                            point.Z = reader.ReadDouble();
-                            point.I = reader.ReadInt16();
-                            if (minY < point.Position.Y && point.Position.Y < maxX)
-                            {
-                                p.Add(point);
-                            }
-
-                        } while (true);                                              
-                    }
-                    else if (maxX <= X) // we are too far
-                    {
-                        position -= change; 
-                    }
-                    else
-                    {
-                        position += change;                      
-                    }
-
-                } while (true);
-            }
-        }
+       
 
     }
 }
