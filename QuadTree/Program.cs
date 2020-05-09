@@ -10,7 +10,11 @@ namespace QuadTree
         {
             Structure structure = new Structure();
             structure.ReadFromFile();
+            structure.SaveAsBinaryFile();
+            double d1=2, d2 = 1;
+            structure.GetDataFromBinaryFile(d1, d2);
             
+            // Histogram .....
         }
 
     }

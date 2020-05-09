@@ -37,10 +37,43 @@ namespace QuadTree
                 Console.WriteLine("The file could not be read:");
                 Console.WriteLine(e.Message);
             }
-
         }
 
- 
+        public void SaveAsBinaryFile()
+        {            
+            using (BinaryWriter writer = new BinaryWriter(File.Open("data.bin", FileMode.Create)))
+            {
+                foreach (KeyValuePair<double, Point> kvp in Data)
+                {
+                    writer.Write(kvp.Value.Position.X);
+                    writer.Write(kvp.Value.Position.Y);
+                    writer.Write(kvp.Value.Z);
+                    writer.Write(kvp.Value.I);
+                }
+            }
+        }
 
+
+        public void GetDataFromBinaryFile(double d1, double d2)
+        {
+            double X;
+            double Y;
+            double Z;
+            double I;
+
+
+            using (BinaryReader reader = new BinaryReader(File.Open("data.bin", FileMode.Open)))
+            {
+                X = reader.ReadDouble();
+                Y = reader.ReadDouble();
+                Z = reader.ReadDouble();
+                I = reader.ReadInt16();
+            }
+
+            Console.WriteLine("X: " + X);
+            Console.WriteLine("Y: " + Y);
+            Console.WriteLine("Z: " + Z);
+            Console.WriteLine("I: " + I);
+        }
     }
 }
