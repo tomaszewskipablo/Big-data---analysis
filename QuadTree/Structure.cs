@@ -62,11 +62,13 @@ namespace QuadTree
         {
             List<Point> p = new List<Point>();
             
-            double X;
+            double X; 
             int counter = 2;
             int size = numerOfLines * 26;
+            size = size + size % 26;
             int change=size/2;
             int position = size / 2; // middle
+            
             using (BinaryReader reader = new BinaryReader(File.Open("data.bin", FileMode.Open)))
             {
                 
@@ -77,7 +79,7 @@ namespace QuadTree
 
                     reader.BaseStream.Position = position; // middle
                     X = reader.ReadDouble();
-                    if (minX < X && X < maxX)
+                    if (minX <= X && X < maxX)
                     {
                         Point point = new Point();
                         point.Position.X = X;
@@ -86,7 +88,7 @@ namespace QuadTree
                         point.I = reader.ReadInt16();
                         p.Add(point);
                     }
-                    else if (maxX < X) // we are too far
+                    else if (maxX <= X) // we are too far
                     {
                         position -= change; 
                     }

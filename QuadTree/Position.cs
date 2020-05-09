@@ -5,7 +5,9 @@ namespace QuadTree
     {
         public double X { get; set; }
         public double Y { get; set; }
-
+        public Position()
+        {
+        }
         public Position(double x, double y)
         {
             X = x;

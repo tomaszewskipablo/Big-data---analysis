@@ -9,6 +9,8 @@ namespace QuadTree
 
         public Point()
         {
+            Position position = new Position();
+            Position = position;
         }
 
             public Point(double x, double y, double z, short i)
