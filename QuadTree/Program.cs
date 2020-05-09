@@ -10,7 +10,7 @@ namespace QuadTree
         {
             Structure structure = new Structure();
             structure.ReadFromFile();
-
+            
         }
 
     }

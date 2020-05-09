@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Text;
 
@@ -7,11 +8,10 @@ namespace QuadTree
 {
     class Structure
     {
-        List<Point> Data = new List<Point>();
+        public SortedList<double, Point> Data = new SortedList<double, Point>();
 
         public void ReadFromFile()
         {
-            List<Point> nodes = new List<Point>();
             try
             {
                 // Read file using StreamReader. Reads file line by line    
@@ -22,13 +22,10 @@ namespace QuadTree
 
                     while ((ln = file.ReadLine()) != null)
                     {
-                        Console.WriteLine(ln);
 
-                        if (counter % 2 == 0)
-                        {
-                            string[] tokens = ln.Split(' ');
-                            nodes.Add(new Point(Convert.ToDouble(tokens[0]), Convert.ToDouble(tokens[1]), Convert.ToDouble(tokens[2]), Convert.ToInt16(tokens[3])));
-                        }
+                        string[] tokens = ln.Split(' ');
+                        Data.Add(Convert.ToDouble(tokens[0]), new Point(Convert.ToDouble(tokens[0]), Convert.ToDouble(tokens[1]), Convert.ToDouble(tokens[2]), Convert.ToInt16(tokens[3])));
+
                         counter++;
                     }
                     file.Close();
@@ -43,6 +40,7 @@ namespace QuadTree
 
         }
 
+ 
 
     }
 }

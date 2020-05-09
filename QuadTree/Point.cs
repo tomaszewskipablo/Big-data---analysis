@@ -22,5 +22,12 @@ namespace QuadTree
             I = i;
             Position = p;
         }
+        public Point(Point point)
+        {
+            Position position = new Position(point.Position.X, point.Position.Y);
+            Position = position;
+            Z = point.Z;
+            I = point.I;
+        }
     }
 }
