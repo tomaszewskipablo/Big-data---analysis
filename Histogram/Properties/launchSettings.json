@@ -2,7 +2,7 @@
   "profiles": {
     "newProfile1": {
       "commandName": "Project",
-      "commandLineArgs": "file 1 394352 394376 39158 39172 10 i",
+      "commandLineArgs": "file 1 394364 394374 39150 39160 5 i",
       "workingDirectory": "D:\\_study\\Maribor\\big data\\Big-data---analysis\\Histogram\\bin\\Debug\\netcoreapp3.1",
       "environmentVariables": {
         "Key": "Value"

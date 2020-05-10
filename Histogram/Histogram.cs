@@ -131,6 +131,7 @@ namespace Histogram
             }
             denominator = Math.Pow(denominator, 2);
             kurtosis = factor * nominator / denominator;
+            kurtosis -= 3;
         }
         public void CalculateAllVariables()
         {

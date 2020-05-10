@@ -8,9 +8,10 @@ namespace Histogram
         static Histogram histogram;
         static void Main(string[] args)
         {
-            if (args.Length < 8)
+            if (args.Length != 8)
             {
-                System.Console.WriteLine("Plese run program:\n program <preprocessed_file> <M> <minX> <maxX> <minY> <maxY> <bin_size> <selection>");
+                System.Console.WriteLine("Wrong input");
+                System.Console.WriteLine("Proper format\n program <preprocessed_file> <M> <minX> <maxX> <minY> <maxY> <bin_size> <selection>");
                 return;
             }
             else
@@ -65,7 +66,7 @@ namespace Histogram
                     //check untill 
                     X = BitConverter.ToDouble(chunk, size-26); // get last element in chunk
                     chukCounter++;
-                    Console.WriteLine(minX - X);
+                    
                 } while (X < minX);
 
                 
@@ -85,7 +86,7 @@ namespace Histogram
 
                     // try to find boundaries
                     X = BitConverter.ToDouble(chunk, position);
-                    Console.WriteLine(minX - X);
+                    
                     if (minX <= X && X < maxX)
                     {
                         // We are in the right place now, go up
@@ -93,13 +94,13 @@ namespace Histogram
                         {
                             position -= 26;                            
                             X = BitConverter.ToDouble(chunk, position);
-                            Console.WriteLine(minX - X);
+                            
                             if (X < minX)
                             {
                                 break;                                
                             }
                         } while (true);
-                        //We are on minimum
+                        //We are on MINIMUM (one below minimum)
                         do
                         {
                             if (X > maxX)
@@ -124,7 +125,7 @@ namespace Histogram
                             
                             double Y = BitConverter.ToDouble(chunk, position+8);
                             
-                            if (minY <= Y && Y < maxY)
+                            if (minY <= Y && Y <= maxY)
                             {
                                 // ADD Z OR I
                                 if (isI)
