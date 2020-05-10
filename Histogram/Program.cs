@@ -53,29 +53,66 @@ namespace Histogram
         {
             
             double X;
-            int chukCounter = 0;
+            
             byte[] chunk;
-
-
 
             using (BinaryReader reader = new BinaryReader(File.Open("data.bin", FileMode.Open)))
             {
+                // -------------  BINARY SEARCH -------------
+                // ------------- FIND RIGHT CHUNK -----------
+                long wholeSize = reader.BaseStream.Length;
+               
+                double XFirst, XLast;
+                int positionChunk = (int)(wholeSize / 2); // middle of the middle chunk
+                
+                int changeChunk = positionChunk;
+
+               
                 do
                 {
+                    //positionChunk = positionChunk - positionChunk % size;
+                    changeChunk = changeChunk / 2;
+                    changeChunk = changeChunk - changeChunk % size;
+                    //changeChunk = changeChunk - changeChunk % 26;
+                    if (changeChunk < size)
+                    {
+                        changeChunk = size;
+                    }
+                    positionChunk -= size / 2; // get to the begening of the middle chunk
+
+                    reader.BaseStream.Position = positionChunk;
                     chunk = reader.ReadBytes(size);
                     //check untill 
-                    X = BitConverter.ToDouble(chunk, size-26); // get last element in chunk
-                    chukCounter++;
-                    
-                } while (X < minX);
+                    XFirst = BitConverter.ToDouble(chunk, 0);// get first element in chunk
+                    XLast = BitConverter.ToDouble(chunk, size - 26); // get last element in chunk4
+                                        
+                    if (XFirst <= minX && minX < XLast) // right place
+                    {
+                        break;
+                    }
+                    else if (XFirst >= minX) // we are too far
+                    {
+                        positionChunk += size / 2;
+                        positionChunk -= changeChunk;
+                    }
+                    else 
+                    {
+                        positionChunk += size / 2;
+                        positionChunk += changeChunk;
+                    }
+                } while (true);
+                // -------------  BINARY SEARCH -------------
+                // ------------- FIND RIGHT CHUNK -----------
+                // END
 
-                
+                // we are in right chunk
+
+                //lets find where is our wanted boundaries (binary tree again)
                 int change = size / 2;
                 int position = size / 2; // middle
                 position = position + position % 26;
                 do
-                {
-                    
+                {                    
                     change = change / 2;
                     change = change - change % 26;
                     if(change < 26)
