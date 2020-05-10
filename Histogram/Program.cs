@@ -16,7 +16,6 @@ namespace Histogram
             }
             else
             {
-                // read user parameters
                 string fileName = args[0];
                 int M = int.Parse(args[1]);
 
@@ -37,7 +36,7 @@ namespace Histogram
 
                 histogram = new Histogram(binSize);
 
-                GetDataFromBinaryFile(minX, maxX, minY, maxY, memoryUsage, isI);
+                GetDataFromBinaryFile(fileName, minX, maxX, minY, maxY, memoryUsage, isI, M);
 
 
 
@@ -49,14 +48,14 @@ namespace Histogram
             }
 
         }
-        public static void GetDataFromBinaryFile(double minX, double maxX, double minY, double maxY, int size, bool isI)
+        public static void GetDataFromBinaryFile(string fileName,double minX, double maxX, double minY, double maxY, int size, bool isI, int M)
         {
             
             double X;
             
             byte[] chunk;
 
-            using (BinaryReader reader = new BinaryReader(File.Open("data.bin", FileMode.Open)))
+            using (BinaryReader reader = new BinaryReader(File.Open(fileName, FileMode.Open)))
             {
                 // -------------  BINARY SEARCH -------------
                 // ------------- FIND RIGHT CHUNK -----------
@@ -66,11 +65,12 @@ namespace Histogram
                 int positionChunk = (int)(wholeSize / 2); // middle of the middle chunk
                 
                 int changeChunk = positionChunk;
+                bool isFirst = true;
 
-               
+
                 do
                 {
-                    //positionChunk = positionChunk - positionChunk % size;
+                    
                     changeChunk = changeChunk / 2;
                     changeChunk = changeChunk - changeChunk % size;
                     //changeChunk = changeChunk - changeChunk % 26;
@@ -79,12 +79,20 @@ namespace Histogram
                         changeChunk = size;
                     }
                     positionChunk -= size / 2; // get to the begening of the middle chunk
+                    
+                    // if M is even, in first move we placed in the middle of node (move to half left needed)
+                    if (M % 2 == 0 && isFirst == true)
+                    {
+                        isFirst = false;
+                        // move half to the left
+                        positionChunk -= 13;
+                    }
 
                     reader.BaseStream.Position = positionChunk;
                     chunk = reader.ReadBytes(size);
-                    //check untill 
+                    
                     XFirst = BitConverter.ToDouble(chunk, 0);// get first element in chunk
-                    XLast = BitConverter.ToDouble(chunk, size - 26); // get last element in chunk4
+                    XLast = BitConverter.ToDouble(chunk, size - 26); // get last element in chunk
                                         
                     if (XFirst <= minX && minX < XLast) // right place
                     {
@@ -154,12 +162,8 @@ namespace Histogram
                             position += 26;
                             X = BitConverter.ToDouble(chunk, position);
                             
-                            
-                            
-                            // ADD POINT
-                            double value=0;
-
-                            
+                                                                                    
+                            double value=0;                            
                             double Y = BitConverter.ToDouble(chunk, position+8);
                             
                             if (minY <= Y && Y <= maxY)
