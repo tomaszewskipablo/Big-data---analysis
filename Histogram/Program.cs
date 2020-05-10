@@ -28,7 +28,7 @@ namespace Histogram
                 int binSize = int.Parse(args[6]);
                 char letter = char.Parse(args[7].ToUpper());
 
-                bool isI;
+                bool isI=true;
                 if (letter == 'I')
                     isI = true;
                 else if (letter == 'Z')
@@ -36,8 +36,7 @@ namespace Histogram
 
                 histogram = new Histogram(binSize);
 
-
-                GetDataFromBinaryFile(minX, maxX, minY, maxY, memoryUsage);
+                GetDataFromBinaryFile(minX, maxX, minY, maxY, memoryUsage, isI);
 
 
 
@@ -49,22 +48,33 @@ namespace Histogram
             }
 
         }
-        public static void GetDataFromBinaryFile(double minX, double maxX, double minY, double maxY, int size)
+        public static void GetDataFromBinaryFile(double minX, double maxX, double minY, double maxY, int size, bool isI)
         {
             
             double X;
-            int counter = 2;
-            
-            size = size + size % 26;
-            int change = size / 2;
-            int position = size / 2; // middle
-            position = position + position % 26;
+            int chukCounter = 0;
+            byte[] chunk;
+
+
 
             using (BinaryReader reader = new BinaryReader(File.Open("data.bin", FileMode.Open)))
             {
-
                 do
                 {
+                    chunk = reader.ReadBytes(size);
+                    //check untill 
+                    X = BitConverter.ToDouble(chunk, size-26); // get last element in chunk
+                    chukCounter++;
+                    Console.WriteLine(minX - X);
+                } while (X < minX);
+
+                
+                int change = size / 2;
+                int position = size / 2; // middle
+                position = position + position % 26;
+                do
+                {
+                    
                     change = change / 2;
                     change = change - change % 26;
                     if(change < 26)
@@ -72,42 +82,59 @@ namespace Histogram
                         change = 26;
                     }
 
-                    reader.BaseStream.Position = position; // middle
-                    Console.WriteLine(position+ "   ");
-                    X = reader.ReadDouble();
+
+                    // try to find boundaries
+                    X = BitConverter.ToDouble(chunk, position);
+                    Console.WriteLine(minX - X);
                     if (minX <= X && X < maxX)
                     {
                         // We are in the right place now, go up
                         do
                         {
-                            position -= 26;
-                            reader.BaseStream.Position = position;
-                            X = reader.ReadDouble();
+                            position -= 26;                            
+                            X = BitConverter.ToDouble(chunk, position);
+                            Console.WriteLine(minX - X);
                             if (X < minX)
                             {
-                                break;
+                                break;                                
                             }
                         } while (true);
                         //We are on minimum
                         do
                         {
-
-                            position += 26;
-                            reader.BaseStream.Position = position;
-                            X = reader.ReadDouble();
                             if (X > maxX)
                             {
                                 position -= 26;
-                                break;
+                                return;
                             }
-                            // ADD POINT
-                            double value;
-
-                            double Y = reader.ReadDouble();
-                            value = reader.ReadDouble(); // Z
-                            value = reader.ReadInt16(); // I
-                            if (minY < Y && Y < maxY)
+                            if (position >= size - 26)
                             {
+                                chunk = reader.ReadBytes(size);
+                                position =-26;
+                            }
+                            // ADDING POINTS
+                            position += 26;
+                            X = BitConverter.ToDouble(chunk, position);
+                            
+                            
+                            
+                            // ADD POINT
+                            double value=0;
+
+                            
+                            double Y = BitConverter.ToDouble(chunk, position+8);
+                            
+                            if (minY <= Y && Y < maxY)
+                            {
+                                // ADD Z OR I
+                                if (isI)
+                                {
+                                    value = BitConverter.ToInt16(chunk, position + 24); // I
+                                }
+                                else
+                                {
+                                    value = BitConverter.ToDouble(chunk, position + 16); // Z
+                                }
                                 histogram.InsertValue(value);
                             }
 
